@@ -1,0 +1,21 @@
+{
+  "loading": "Loading Server",
+  "id": "ID: ",
+
+  "init_title": "Initializing",
+  "init_text": "Initializing system...",
+  "map_title": "Map Loaded",
+  "map_text": "Loading map assets...",
+  "session_title": "Session Started",
+  "session_text": "Session is starting...",
+  "done_title": "Complete",
+  "done_text": "All done!",
+
+  "init_done": "Data initialized, configuring assets...",
+  "map_done": "Map is loaded, setting up environment...",
+  "session_done": "Session is started, finishing up...",
+
+  "palyer_name": "Player Name",
+  "palyer_id": "28",
+  "steam_id": "steam:11000012bc9de7f"
+}
