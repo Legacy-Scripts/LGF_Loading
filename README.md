@@ -5,7 +5,7 @@
 
 A loading screen for FiveM built with TypeScript and React.
 
-![](https://img.shields.io/github/v/release/Legacy-Framework/lgf_loading?logo=github)
+![](https://i.imgur.com/6x6Rfa5.png)
 
 ## Getting Started
 
