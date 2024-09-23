@@ -47,6 +47,7 @@
   "dependencies": {
     "@jgoz/esbuild-plugin-typecheck": "^4.0.1",
     "@mantine/core": "^7.12.2",
+    "@mantine/emotion": "^7.12.2",
     "@mantine/hooks": "^7.12.2",
     "@nativewrappers/fivem": "latest",
     "@overextended/ox_lib": "latest",
