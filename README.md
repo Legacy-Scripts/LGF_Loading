@@ -33,7 +33,7 @@ pnpm install
 pnpm build
 ```
 
-## Development
+### Development
 
 - **Watch for Changes**: Use the following command to actively rebuild modified files during development:
 
@@ -47,7 +47,7 @@ pnpm watch
 pnpm web:dev
 ```
 
-## Project Structure
+### Project Structure
 
 - **`/dist/`**: Compiled project files.
 - **`/locales/`**: JSON files for translations using [ox_lib](https://overextended.dev/ox_lib/Modules/Locale/Shared).
@@ -55,6 +55,6 @@ pnpm web:dev
 - **`/src/`**: Project source code.
 - **`/static/`**: Non-compiled files to be included with the resource (e.g., config).
 
-## Acknowledgments
+### Acknowledgments
 
 - Overextended: [fivem-typescript-boilerplate](https://github.com/overextended/fivem-typescript-boilerplate)
