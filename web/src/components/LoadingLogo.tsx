@@ -1,5 +1,5 @@
 import { Image } from '@mantine/core';
-import logo from '../../../static/assets/logo.png';
+import logo from '@assets/logo.png';
 
 function LoadingLogo() {
   return (

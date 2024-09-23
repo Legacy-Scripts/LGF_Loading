@@ -5,12 +5,12 @@ import LoadingLogo from './components/LoadingLogo';
 import LoadingInfo from './components/LodaingInfo';
 import LoadingProgress from './components/LoadingProgress';
 
-import bg_image1 from '../../static/assets/bg_image1.png';
-import bg_image2 from '../../static/assets/bg_image2.png';
-import bg_image3 from '../../static/assets/bg_image3.png';
-import bg_image4 from '../../static/assets/bg_image4.png';
-import bg_image5 from '../../static/assets/bg_image5.png';
-import bg_image6 from '../../static/assets/bg_image6.png';
+import bg_image1 from '@assets/bg_image1.png';
+import bg_image2 from '@assets/bg_image2.png';
+import bg_image3 from '@assets/bg_image3.png';
+import bg_image4 from '@assets/bg_image4.png';
+import bg_image5 from '@assets/bg_image5.png';
+import bg_image6 from '@assets/bg_image6.png';
 
 function App() {
   const [currentBg, setCurrentBg] = useState(0);
