@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Stack } from '@mantine/core';
 import { createStyles } from '@mantine/emotion';
-import Config from '@config';
+import Config from '@common/config';
 import LoadingLogo from './components/LoadingLogo';
 import LoadingInfo from './components/LodaingInfo';
 import LoadingProgress from './components/LoadingProgress';
