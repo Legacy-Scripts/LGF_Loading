@@ -10,7 +10,7 @@
     "paths": {
       "~/*": ["../../*"],
       "@assets/*": ["../static/assets/*"],
-      "@config": ["../src/common/config"]
+      "@common/*": ["../src/common/*"]
     },
     "types": ["@types/node", "./nui.d.ts"],
 
