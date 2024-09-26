@@ -1,23 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Container, Flex, Avatar, Text, Badge } from '@mantine/core';
-import { createStyles } from '@mantine/emotion';
+import { useMantineTheme, Container, Flex, Avatar, Text, Badge } from '@mantine/core';
 import { IconGrid3x3 } from '@tabler/icons-react';
 import locale from '../locales';
 
-const useStyles = createStyles((theme) => ({
-  container: {
-    borderRadius: 5, 
-    position: 'relative', 
-    zIndex: 1,
-    backgroundColor: theme.colors.dark[6],
-    padding: 20,
-    margin: 30,
-    width: 400,
-  },
-}));
-
 function LoadingProgress() {
-  const { classes } = useStyles();
+  const theme = useMantineTheme();
   const [playerName, setPlayerName] = useState<string>('');
   const [playerId, setPlayerID] = useState<number>();
   const [playerSteamId, setPlayerSteamId] = useState<string>('');
@@ -31,7 +18,13 @@ function LoadingProgress() {
   }, []);
 
   return (
-    <Container className={classes.container}>
+    <Container
+      w={400}
+      m={30}
+      p={20}
+      bg={theme.colors.dark[6]}
+      style={{ borderRadius: 5, position: 'relative', zIndex: 1 }}
+    >
       <Flex align="center" direction="row">
         <Avatar variant="light" radius="md" size="lg" color="blue" />
         <Flex justify="space-between" w="100%" ml="md" direction="column">

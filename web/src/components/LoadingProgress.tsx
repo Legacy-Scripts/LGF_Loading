@@ -1,26 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Container, Flex, Title, Text, Loader, Timeline, Badge } from '@mantine/core';
+import { useMantineTheme, Container, Flex, Title, Text, Loader, Timeline, Badge } from '@mantine/core';
 import { IconTools, IconMap, IconRocket, IconCheck, IconCircleCheck } from '@tabler/icons-react';
-import { createStyles } from '@mantine/emotion';
 import locale from '../locales';
 
 type HandlerFunction = (data: any) => void;
 
-const useStyles = createStyles((theme) => ({
-  container: {
-    height: 'auto',
-    width: 400,
-    margin: 30,
-    padding: 20,
-    position: 'relative',
-    backgroundColor: theme.colors.dark[6],
-    borderRadius: 5,
-    zIndex: 1,
-  },
-}));
-
 function LoadingProgress() {
-  const { classes } = useStyles();
+  const theme = useMantineTheme();
   const [currentStage, setCurrentStage] = useState(0);
   const [progress, setProgress] = useState(0);
   const [descriptions, setDescriptions] = useState<string[]>(['', '', '', '']);
@@ -87,7 +73,15 @@ function LoadingProgress() {
   }, []);
 
   return (
-    <Container className={classes.container}>
+    <Container
+      h={'auto'}
+      w={400}
+      m={30}
+      p={20}
+      pos={'relative'}
+      bg={theme.colors.dark[6]}
+      style={{ borderRadius: 5, zIndex: 1 }}
+    >
       <Flex justify="space-between" mb={25}>
         <Title order={2}>{locale.loading}</Title>
         {currentStage === 3 ? <IconCircleCheck size={36} color="green" /> : <Loader color="blue" />}

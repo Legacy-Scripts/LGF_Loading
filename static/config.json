@@ -1,11 +1,3 @@
 {
-  "DisableManualShutdown": 0,
-  "BackgroundImages": [
-    "bg_image1.png",
-    "bg_image2.png",
-    "bg_image3.png",
-    "bg_image4.png",
-    "bg_image5.png",
-    "bg_image6.png"
-  ]
+  "DisableManualShutdown": 0
 }
