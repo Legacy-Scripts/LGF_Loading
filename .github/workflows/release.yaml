@@ -43,17 +43,17 @@ jobs:
 
     - name: Prepare release assets
       run: |
-        mkdir release_assets
-        cp -r dist release_assets/
-        cp fxmanifest.lua release_assets/
-        cp LICENSE release_assets/
-        cp README.md release_assets/
+        mkdir LGF_Loading
+        cp -r dist LGF_Loading/
+        cp fxmanifest.lua LGF_Loading/
+        cp LICENSE LGF_Loading/
+        cp README.md LGF_Loading/
 
     - name: Compress Asset
       run: |
         REPO_NAME=$(basename `git rev-parse --show-toplevel`)
-        cd release_assets
-        zip -r ../$REPO_NAME.zip .
+        cd LGF_Loading
+        zip -r ../LGF_Loading.zip .
 
     - name: Create GitHub Release
       id: create_release
@@ -75,6 +75,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./${{ github.repository }}.zip
-        asset_name: ${{ github.repository }}.zip
+        asset_path: ./LGF_Loading.zip
+        asset_name: LGF_Loading.zip
         asset_content_type: application/zip
