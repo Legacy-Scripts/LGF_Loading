@@ -39,7 +39,7 @@ jobs:
 
     - name: Run build script
       run: |
-        pnpm run build
+        pnpm run build -- ${{ steps.extract_release_name.outputs.release_name }}
 
     - name: Prepare release assets
       run: |
