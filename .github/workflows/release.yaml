@@ -36,4 +36,4 @@ jobs:
         with:
           files: ${{ steps.repo.outputs.name }}.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOKEN: ${{ secrets.TOKEN }}
