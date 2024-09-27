@@ -7,33 +7,74 @@ on:
 
 jobs:
   create_release:
+    name: Create Release
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18.x ]
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
+    - name: Extract release name from tag
+      id: extract_release_name
+      run: |
+        RELEASE_NAME=${GITHUB_REF#refs/tags/}
+        echo "::set-output name=release_name::$RELEASE_NAME"
 
-      - name: Get repository name
-        id: repo
-        run: echo "::set-output name=name::$(basename -s .git `git config --get remote.origin.url`)"
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      - name: Create release zip
-        run: |
-          zip -r "${{ steps.repo.outputs.name }}.zip" fxmanifest.lua dist LICENSE README.md
+    - name: Install pnpm
+      run: |
+        npm install -g pnpm
 
-      - name: Upload release zip as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: release-zip
-          path: ${{ steps.repo.outputs.name }}.zip
+    - name: Install dependencies
+      run: |
+        pnpm install
 
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: ${{ steps.repo.outputs.name }}.zip
-        env:
-          TOKEN: ${{ secrets.TOKEN }}
+    - name: Run build script
+      run: |
+        pnpm run build
+
+    - name: Prepare release assets
+      run: |
+        mkdir release_assets
+        cp -r dist release_assets/
+        cp fxmanifest.lua release_assets/
+        cp LICENSE release_assets/
+        cp README.md release_assets/
+
+    - name: Compress Asset
+      run: |
+        REPO_NAME=$(basename `git rev-parse --show-toplevel`)
+        cd release_assets
+        zip -r ../$REPO_NAME.zip .
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      with:
+        tag_name: ${{ steps.extract_release_name.outputs.release_name }}
+        release_name: ${{ steps.extract_release_name.outputs.release_name }}
+        body: |
+          Version Bump to ${{ steps.extract_release_name.outputs.release_name }}.
+        draft: true
+        prerelease: false
+
+    - name: Upload Release Asset
+      id: upload_release_asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./${{ github.repository }}.zip
+        asset_name: ${{ github.repository }}.zip
+        asset_content_type: application/zip
