@@ -1,0 +1,39 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Get repository name
+        id: repo
+        run: echo "::set-output name=name::$(basename -s .git `git config --get remote.origin.url`)"
+
+      - name: Create release zip
+        run: |
+          zip -r "${{ steps.repo.outputs.name }}.zip" fxmanifest.lua dist LICENSE README.md
+
+      - name: Upload release zip as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-zip
+          path: ${{ steps.repo.outputs.name }}.zip
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ steps.repo.outputs.name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
