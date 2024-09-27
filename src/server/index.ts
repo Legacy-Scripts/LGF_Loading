@@ -1,4 +1,4 @@
-on('playerConnecting', (name: string, deferrals: any) => {
+on('playerConnecting', (name: string, _: any, deferrals: any) => {
     const playerId = global.source.toString();
 
     deferrals.handover({
