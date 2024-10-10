@@ -1,68 +1,74 @@
-name: Create Release
+name: Release
 
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v*.*.*'
 
 jobs:
-  create_release:
-    name: Create Release
+  create-release:
+    name: Build and Create Tagged release
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [ 18.x ]
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Install archive tools
+        run: sudo apt install zip
 
-    - name: Set env
-      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Checkout source code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.repository.default_branch }}
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          version: 9
 
-    - name: Install pnpm
-      run: |
-        npm install -g pnpm
+      - name: Get variables
+        id: get_vars
+        run: |
+          echo '::set-output name=SHORT_SHA::$(git rev-parse --short HEAD)'
+          echo '::set-output name=DATE::$(date +'%D')'
 
-    - name: Install dependencies
-      run: |
-        pnpm install
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
 
-    - name: Run build script
-      run: |
-        pnpm run build -- ${{ env.RELEASE_VERSION }}
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
 
-    - name: Prepare release assets
-      run: |
-        mkdir LGF_Loading
-        cp -r dist LGF_Loading/
-        cp fxmanifest.lua LGF_Loading/
-        cp LICENSE LGF_Loading/
-        cp README.md LGF_Loading/
+      - name: Run build
+        run: pnpm build
 
-    - name: Bundle files
-      run: |
-        mkdir -p ./temp/LGF_Loading
-        cp ./{LICENSE,README.md,fxmanifest.lua} ./temp/LGF_Loading
-        cp -r ./{imports,resource,locales} ./temp/ox_lib
-        cp -r ./dist ./temp/LGF_Loading/dist/
-        cd ./temp && zip -r ../LGF_Loading.zip ./LGF_Loading
+      - name: Bump package version
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          pnpm version ${{ github.ref_name }} --git-tag-version false
 
-    - name: Create Release
-      uses: 'marvinpinto/action-automatic-releases@v1.2.1'
-      id: auto_release
-      with:
-        repo_token: '${{ secrets.TOKEN }}'
-        title: ${{ env.RELEASE_VERSION }}
-        prerelease: false
-        files: ox_lib.zip
+      - name: Update repository
+        run: |
+          git add .
+          git commit -am '${{ github.ref_name }}'
+          git push
 
-      env:
-        CI: false
-        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      - name: Bundle files
+        run: |
+          zip -r ${{ github.event.repository.name }}.zip . -x "./.*" "./node_modules/*" "./scripts/*" "./src/*" "./web/*" "./tsconfig.json" "./pnpm-lock.yaml" "./package.json" "./eslint.config.js"
+
+      - name: Create Release
+        uses: 'marvinpinto/action-automatic-releases@v1.2.1'
+        id: auto_release
+        with:
+          repo_token: '${{ secrets.TOKEN }}'
+          title: '${{ env.RELEASE_VERSION }}'
+          prerelease: false
+          files: ${{ github.event.repository.name }}.zip
+
+        env:
+          CI: false
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
